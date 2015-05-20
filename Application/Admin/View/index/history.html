@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>预定查询</title>
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/style.css">
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/dropdownlist.css">
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/datepicker.css">
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/libs/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/dropdownlist.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/datepicker.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/jquery.enplaceholder.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/print.js?_t={$Think.config.NOWTIME}"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/LodopFuncs.js?_t={$Think.config.NOWTIME}"></script>
+	<script type="text/javascript"  src="__PUBLIC__/Admin/js/plugins-call.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<!-- header -->
+		<div class="header-wrapper">
+			<header class="header">
+				<div class="header-brand">
+					<a href="#" class="logo"></a>
+				</div>
+				<div class="header-nav">
+					<ul>
+						<li class="nav-item"><a href="{:U('index')}">场地预定</a></li>
+						<li class="nav-item active"><a href="{:U('history')}">预定查询</a></li>
+					</ul>
+				</div>
+				<div class="header-oper">
+					<a href="javascript:void(0)" id="orderVerify" class="dcz-btn btn-primary btn-sm">订单验证</a>
+				</div>
+			</header>
+		</div>
+
+		<!-- main -->
+		<div class="main-wrapper">
+			<div class="main">
+
+				<!-- 场馆基本信息 -->
+				<section  class="venues-base-info">
+					<div class="container clearfix">
+						<form action="#" class="dcz-form">
+							<div class="form-group">
+								<div class="filter-group">
+									<label for="selectVenues"  class="filter-label">场馆</label>
+									<div  id="selectVenues" class="filter-select"></div>
+								</div>
+								<div class="filter-group">
+									<label for="selectSport" class="filter-label">项目</label>
+									<div id="selectSport" class="filter-select"></div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="radio" class="checkradio" name="search" id="searchOrder" checked="checked">
+								<label for="searchOrder" class="form-label form-label-md">订单查询</label>
+								<input type="radio" class="checkradio ml70" name="search" id="searchOrderMore">
+								<label for="searchOrderMore" class="form-label form-label-md">批量预定查询</label>
+							</div>
+							<div id="searchOrderGroup" >
+								<div class="form-group"  style="margin-top:-3px;padding-bottom:10px;">
+									<input type="radio" class="checkradio" name="time" id="timeService" checked="checked">
+									<label for="timeService" class="form-label form-label-md">消费时间</label>
+									<input type="radio" class="checkradio ml70" name="time" id="timeOrder">
+									<label for="timeOrder" class="form-label form-label-md">下单时间</label>
+								</div>
+								<div class="form-group">
+									<label for="" class="form-label form-label-lg">时间</label>
+									<input type="text"  class="datepicker input-datepicker">
+									<label for=""  class="form-label form-label-sm">到</label>
+									<input type="text"  class="datepicker input-datepicker">
+								</div>
+								<div class="form-group">
+									<label for="search-search" class="form-label form-label-lg">搜索</label>
+									<input type="text" class="form-control search-search placeholder" id="search-search" placeholder="姓名/手机号/订单号/会员号/操作员">
+									<input type="submit" class="dcz-btn btn-default btn-md btn-inline" value="预订">
+									<input type="submit"  class="dcz-btn btn-warning btn-md btn-inline" value="锁定">
+								</div>
+							</div>
+							<div id="searchOrderMoreGroup" style="display:none;">
+								<div class="form-group">
+									<label for="" class="form-label form-label-lg">时间</label>
+									<input type="text"  class="datepicker input-datepicker">
+									<label for=""  class="form-label form-label-sm">到</label>
+									<input type="text"  class="datepicker input-datepicker">
+								</div>
+								<div class="form-group">
+									<label for="" class="form-label form-label-lg">姓名</label>
+									<input type="text" class="form-control inline-control">
+									<label for="" class="form-label form-label-lg">手机号</label>
+									<input type="text" class="form-control inline-control">
+									<label for="" class="form-label form-label-lg ">会员号</label>
+									<input type="text" class="form-control inline-control">
+								</div>
+								<div class="form-group">
+									<input type="submit"  class="dcz-btn btn-default btn-md btn-inline" value="查询">
+								</div>
+							</div>
+						</form>
+					</div>
+				</section>
+<script type="text/javascript">
+	$(function(){
+		$('#searchOrder').on('click',function(){
+			$('#searchOrderMoreGroup').slideUp();
+			$('#searchOrderGroup').slideDown();
+		});
+		$('#searchOrderMore').on('click',function(){
+			$('#searchOrderGroup').slideUp();
+			$('#searchOrderMoreGroup').slideDown();
+		});
+	})
+</script>
+				<!-- 场馆场地信息 -->
+				<section  class="venues-site-info">
+					<div class="container">
+						<table class="order-table">
+							<tr>
+								<th>订单号</th>
+								<th>项目</th>
+								<th>姓名</th>
+								<th>会员号</th>
+								<th>手机号</th>
+								<th>下单日期</th>
+								<th>使用日期</th>
+								<th>场次</th>
+								<th>订单状态</th>
+								<th>验证状态</th>
+								<th>操作员</th>
+								<th>操作</th>
+							</tr>
+							<volist id='order' name='orders'>
+							<tr>
+								<td>{$order['oid']}</td>
+								<td>
+									<switch name="order['stype']">    
+										<case value="1">羽毛球</case>    
+										<case value="2">足球</case>  
+										<case value="3">网球</case>   
+										<default />某球
+									</switch>
+								</td>
+								<td>
+								<empty name="order['name']">无名<else /> {$order['name']}</empty> 
+								</td>
+								<td>{$order['uid']}</td>
+								<td>{$order['phone']}</td>
+								<td>{$order['ordertime']|substr=0,10}<br/> {$order['ordertime']|substr=11,5}</td>
+								<td>{$order['usetimes']}</td>
+								<td>{$order['fsids']}</td>
+								<td>
+									<if condition="($order['status'] eq 0)"> 未付款
+										<elseif condition="($order['status'] eq -1)"/>已过期
+										<else /> 已付款
+									</if>
+								</td>
+								<td>
+									<if condition="($order['status'] eq 3)"> 未知状态
+										<elseif condition="($order['status'] eq 2)"/>已验证
+										<else /> 未验证
+									</if>
+								</td>
+								<td>{$order['operator']}</td>
+								<td><a href="#" onclick="alert('未开放');">退订</a><a href="#">打印</a></td>
+							</tr>
+							</volist>
+						</table>
+
+					<!-- 	<div class="content-page">
+							<ul class="page-list clearfix">
+								<li  class="page-item prev"><a href="#"  class="dcz-btn btn-empty">上一页</a></li>
+								<li class="page-item"><a href="#">1</a></li>
+								<li class="page-item"><a href="#">2</a></li>
+								<li class="page-item hover"><a href="#">3</a></li>
+								<li class="page-item"><a href="#">4</a></li>
+								<li class="page-item"><a href="#">5</a></li>
+								<li class="page-item"><a href="#">6</a></li>
+								<li class="page-item"><a href="#">7</a></li>
+								<li class="page-item"><a href="#">8</a></li>
+								<li class="page-item"><a href="#">9</a></li>
+								<li  class="page-item next"><a href="#" class="dcz-btn btn-empty">下一页</a></li>
+							</ul>
+						</div> -->
+					</div>
+				</section>
+
+			</div>
+		</div>
+
+		<!-- footer -->
+		<div class="footer-wrapper">
+			<footer class="footer">
+				<p class="info-item site-info">
+					<a href="#" class="item email">dingchangzi@gmail.com</a>
+					<a href="#" class="item mobile">151-1698-3618</a>
+					<a href="#" class="item iphone">iPhone版下载</a>
+					<a href="#"	class="item android">安卓版下载</a>
+				</p>
+				<p class="info-item comp-info">
+					<a href="#">关于我们</a>
+					<a href="#">联系我们</a>
+					<a href="#">加入我们</a>
+				</p>
+			</footer>
+			<div class="copy-right">
+				<p>主题备案号：京ICP备11046296号 网站备案号：京ICP备11046296号-2</p>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

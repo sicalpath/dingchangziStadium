@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>场馆预定</title>
+	<meta  author="">
+	<meta  keywords="">
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/style.css?_t={$Think.config.NOWTIME}">
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/dropdownlist.css">
+	<link rel="stylesheet" href="__PUBLIC__/Admin/css/datepicker.css">
+	<!--<script type="text/javascript" src="__PUBLIC__/Admin/js/libs/jquery-1.8.0.min.js"></script>-->
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
+	<!--<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/dropdownlist.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/datepicker.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/jquery.enplaceholder.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins/power-slider.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/reserve-tab.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/plugins-call.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/main-nav-md.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/function.js?_t={$Think.config.NOWTIME}"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/order.js?_t={$Think.config.NOWTIME}"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/print.js?_t={$Think.config.NOWTIME}"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/LodopFuncs.js?_t={$Think.config.NOWTIME}"></script>
+	
+	<script src="http://libs.baidu.com/jqueryui/1.10.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Admin/js/Admin/pnotify.custom.min.js"></script>
+	<link href="__PUBLIC__/Admin/css/pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="wrapper">
+		<!-- header -->
+		<div class="header-wrapper">
+			<header class="header">
+				<div class="header-brand">
+					<a href="#" class="logo"></a>
+				</div>
+				<div class="header-nav">
+					<ul>
+						<li class="nav-item active"><a href="{:U('index')}">场地预定</a></li>
+						<li class="nav-item"><a href="{:U('history')}">预定查询</a></li>
+					</ul>
+				</div>
+				<div class="header-oper">
+					<a href="javascript:void(0)" id="orderVerify" class="dcz-btn btn-primary btn-sm">订单验证</a>
+				</div>
+			</header>
+		</div>
+
+		<!-- main -->
+		<div class="main-wrapper">
+			<div class="main">
+
+				<!-- 场馆基本信息 -->
+				<section  class="main-nav main-nav-md venues-base-info" style="padding-left:20%;">
+					<nav class="nav">
+						<ul class="clearfix" id="mainNav">
+							<li class="nav-item nav-item-md" data-nav="0"><a href="#" onclick="change_sport(1);">
+								<span class="dcz-icon icon-badminton-md"></span>
+								<p class="text">羽毛球</p>
+							</a></li>
+							<li class="nav-item nav-item-md" data-nav="1"><a href="#" onclick="change_sport(2);">
+								<span class="dcz-icon icon-football-md"></span>
+								<p class="text">足球</p>
+							</a></li>							
+							<li class="nav-item nav-item-md" data-nav="2"><a href="#" onclick="change_sport(3);">
+								<span class="dcz-icon icon-tennis-md"></span>
+								<p class="text">网球</p>
+							</a></li>
+							<li class="nav-item nav-item-md" data-nav="3"><a href="#" onclick="change_sport(4);">
+								<span class="dcz-icon icon-basketball-md"></span>
+								<p class="text">篮球</p>
+							</a></li>
+							<li class="nav-item nav-item-md" data-nav="4"><a href="#" onclick="change_sport(5);">
+								<span class="dcz-icon icon-pingpang-md"></span>
+								<p class="text">乒乓球</p>
+							</a></li>
+						</ul>
+						<div style="left: 0px;" class="nav-active-bar" id="navActiveBar"></div>
+					</nav>
+					<div class="container clearfix">
+						<form action="#" class="dcz-form">
+							<!--<div class="filter-group">
+								<label for="selectVenues"  class="filter-label">项目</label>
+								<div  id="selectVenues" class="filter-select"></div>
+							</div>
+							<div class="filter-group" style="display:none;">
+								<label for="selectSport" class="filter-label">项目</label>
+								<div id="selectSport" class="filter-select"></div>
+							</div>-->
+						</form>
+					</div>
+				</section>
+
+				<!-- 场馆场地信息 -->
+				<section  class="venues-site-info">
+					<div class="loading" style="position:absolute; left:-1px; top:1px; width:100%; height:200%; background-color:#FFFFFF; z-index:1000;opacity:0.8;">
+						<div style="margin:30% 50%;">
+							<img src="__PUBLIC__/Home/images/loading.gif" />
+						</div>
+					</div>
+					<div class="container">
+						<!-- 运动选择 -->
+						<div class="venuse-sport-choose"></div>
+						<!-- 时间选择 -->
+						<div class="venues-time-choose slider clearfix"  id="timeSlider">
+							<ul class="sliderbox">
+								<li class="time-item time-item-1 active" id="2015/01/27">
+									<div href="#">
+									<dl>
+										<dt class="today">今天</dt>
+										<dd>
+											<i>剩余</i>
+											<span>26</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-2" id="2015/01/28">
+									<div href="#">
+									<dl>
+										<dt>星期日<br/>01/28</dt>
+										<dd>
+											<i >剩余</i>
+											<span>22</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-3" id="2015/01/29">
+									<div href="#">
+									<dl>
+										<dt>星期一 01/29</dt>
+										<dd>
+											<i>剩余</i>
+											<span>32</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-4" id="2015/01/30">
+								<div href="#">
+									<dl>
+										<dt>星期二 01/30</dt>
+										<dd>
+											<i>剩余</i>
+											<span>17</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-5" id="2015/01/31">
+								<div href="#">
+									<dl>
+										<dt>星期三 01/31</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-6" id="2015/02/01">
+								<div href="#">
+									<dl>
+										<dt>星期四 02/01</dt>
+										<dd>
+											<i>剩余</i>
+											<span>25</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-7" id="2015/02/02">
+								<div href="#">
+									<dl>
+										<dt>星期五 02/02</dt>
+										<dd>
+											<i>剩余</i>
+											<span>23</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+
+								<li class="time-item time-item-8" id="2015/02/03">
+									<div href="#">
+									<dl>
+										<dt>今天</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-9" id="2015/02/04">
+									<div href="#">
+									<dl>
+										<dt>星期日<br/>01/28</dt>
+										<dd>
+											<i >剩余</i>
+											<span>16</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-10" id="2015/02/05">
+									<div href="#">
+									<dl>
+										<dt>星期一 01/29</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-11" id="2015/02/06">
+								<div href="#">
+									<dl>
+										<dt>星期二 01/30</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-12">
+								<div href="#">
+									<dl>
+										<dt>星期三 01/31</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-13">
+								<div href="#">
+									<dl>
+										<dt>星期四 02/01</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-14">
+								<div href="#">
+									<dl>
+										<dt>星期五 02/02</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-15">
+									<div href="#">
+									<dl>
+										<dt>今天</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-16">
+									<div href="#">
+									<dl>
+										<dt>星期日<br/>01/28</dt>
+										<dd>
+											<i >剩余</i>
+											<span>10002</span>
+										</dd>
+									</dl>
+									</div>
+								</li>
+								<li class="time-item time-item-17">
+									<div href="#">
+									<dl>
+										<dt>星期一 01/29</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-18">
+								<div href="#">
+									<dl>
+										<dt>星期二 01/30</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-19">
+								<div href="#">
+									<dl>
+										<dt>星期三 01/31</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-20">
+								<div href="#">
+									<dl>
+										<dt>星期四 02/01</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+								<li class="time-item time-item-21">
+								<div href="#">
+									<dl>
+										<dt>星期五 02/02</dt>
+										<dd>
+											<i>剩余</i>
+											<span>12</span>
+										</dd>
+									</dl>
+								</div>
+								</li>
+							</ul>
+							<div class="prev"></div>
+							<div class="next"></div>
+						</div>
+
+						<input type="text"  class="datepicker input-datepicker datepicker-only">
+						<script type="text/javascript">
+						$(function(){
+							$("#timeSlider").powerSlider({handle:"left",sliderNum:7,delayTime:99999999});
+						});	
+						</script>
+						<!-- 场地选择 -->
+						<div class="venues-site-choose clearfix">
+							<div class="site-table left">
+								<ul class="site-status clearfix">
+									<li class="status-item"><i class="dcz-icon icon-common-vip"></i><span class="text color-blue">VIP</span></li>
+									<li  class="status-item"><i class="dcz-icon icon-common-locked"></i><span class="text color-gray">已锁定</span></li>									
+									<li class="status-item"><i class="dcz-icon selected-icon icon-badminton-selected"></i><span class="text color-yellow">已选定</span></li>
+									<li  class="status-item"><i class="dcz-icon icon-common-selled"></i><span class="text color-green">已售出</span></li>
+									<li  class="status-item"><i class="dcz-icon icon-common-avaliable"></i><span class="text color-green">可预订</span></li>
+									
+									
+									
+									
+									
+								</ul>
+								<ul class="site-table-title clearfix">
+									<li>&nbsp;8:00</li>
+									<li>&nbsp;9:00</li>
+									<li>10:00</li>
+									<li>11:00</li>
+									<li>12:00</li>
+									<li>13:00</li>
+									<li>14:00</li>
+									<li>15:00</li>
+									<li>16:00</li>
+									<li>17:00</li>
+									<li>18:00</li>
+									<li>19:00</li>
+									<li>20:00</li>
+									<li>21:00</li>
+									<li>22:00</li>
+								</ul>
+								<table  class="table sites">
+									<!--<tr>
+										<td  style="width:79px" class="field" sort="1" fid="1">1号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" sort="2" fid="2">2号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="3">3号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="4">4号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="5">5号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="6">6号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="7">7号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="8">8号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="9">9号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>-->
+									<!--<tr>
+										<td  style="width:79px" class="field" fid="10">10号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>
+									<tr>
+										<td  style="width:79px" class="field" fid="11">11号场地</td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="1"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="2"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="3"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="4"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="5"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="6"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="7"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="8"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="9"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="10"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="11"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="12"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="13"></i></td>
+										<td><i class="dcz-icon icon-common-avaliable ftime" ftime="14"></i></td>
+									</tr>-->
+								</table>
+							</div>
+							<div class="site-side right">
+								<!-- tabs nav -->
+								<div class="site-side-tabsnav">
+									<ul class="tab-nav clearfix">
+										<li class="nav-item active">基本预定</li>
+										<li class="nav-item">批量预定</li>
+										<li class="nav-item">批量锁定</li>
+										<li class="nav-item">批量解锁</li>
+									</ul>
+								</div>
+								<!-- tabs container -->
+								<div class="site-side-tabscontainer">
+									<!-- tab-content 1 -->
+									<div class="tab-content active">
+										<form action="{:U('Api/createOrder')}" method="post" class="book">
+											<input id="date" type="hidden" name="date" value="" />
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">会员类型：</span>
+													<input type="radio" name="vip-1" id="novip-1" checked="checked">
+													<label for="novip-1" class="side-bar-radio">非会员</label>
+													<input type="radio" name="vip-1" id="isvip-1"  class="side-bar-radio" ><label for="isvip-1">会员</label>
+												</div>
+												<div id="novip-content-1">
+													<div  class="side-bar-group">
+														<input  class="side-bar-input input placeholder" placeholder="手机号" name="phone" value=""/>
+													</div>
+													<div  class="side-bar-group">
+														<input  class="side-bar-input input placeholder" placeholder="姓名" name="name" value="" />
+													</div>
+												</div>
+												<div id="isvip-content-1"  style="display:none;">
+													<div  class="side-bar-group">
+														<select name="" id="" class="select-default left">
+															<option value="0">校外</option>
+															<option value="1">学生</option>
+															<option value="2">教师</option>
+															<option value="3">混合</option>
+														</select>
+														<input  class="side-bar-input input input-number4 placeholder" placeholder="手机末4位">
+														<!--<a href="#" class="dcz-btn btn-default">查询</a>-->
+													</div>
+												</div>
+											</div>
+											<hr  class="side-hr">
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">已选择<num id="totalField">0</num>个场地</h3>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">场次</span>
+													<div  class="side-bar-input orders">
+		
+													</div>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">总计</span>
+													<p  class="side-bar-input"  style="margin:6px;">￥<input class="money-count" type="text" name="price" value="0"/></p>
+												</div>
+												<!--<div class="side-bar-group">
+													<input type="radio" checked="checked" id="haspay">
+													<label for="haspay">已支付</label>
+												</div>
+												<div class="side-bar-group">
+													<input type="radio" checked="checked" id="payStyle1" name="payStyle">
+													<label for="payStyle1">现金支付</label>
+													<input type="radio" id="payStyle2" name="payStyle">
+													<label for="payStyle2" >刷卡支付</label>
+												</div>-->
+												<div  class="side-bar-group">
+													<input type="button" value="购买" onclick="buy(0)" class="dcz-btn btn-default btn-lg submit">
+													&nbsp;&nbsp;
+													<input type="button" onclick="buy(1)" value="锁定"  class="dcz-btn btn-warning btn-lg submit">
+												</div>
+											</div>
+										</form>
+									</div>
+									<!-- tab-content 2 -->
+									<div class="tab-content">
+										<form action="#">
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">会员类型：</span>
+													<input type="radio" name="vip-2" id="novip-2" checked="checked">
+													<label for="novip-2" class="side-bar-radio">非会员</label>
+													<input type="radio" name="vip-2" id="isvip-2"  class="side-bar-radio" ><label for="isvip-2">会员</label>
+												</div>
+												<div id="novip-content-2">
+													<div  class="side-bar-group">
+														<input  class="side-bar-input input placeholder" placeholder="手机号">
+													</div>
+													<div  class="side-bar-group">
+														<input  class="side-bar-input input placeholder" placeholder="姓名">
+													</div>
+												</div>
+												<div id="isvip-content-2"  style="display:none;">
+													<div  class="side-bar-group">
+														<select name="" id="" class="select-default left">
+															<option value="0">校外</option>
+															<option value="1">学生</option>
+															<option value="2">教师</option>
+															<option value="3">混合</option>
+														</select>
+														<input  class="side-bar-input input input-number4 placeholder" placeholder="手机末4位">
+														<!--<a href="#" class="dcz-btn btn-default">查询</a>-->
+													</div>
+												</div>
+											</div>
+											<hr  class="side-hr">
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">有效日期</h3>
+												</div>
+												<div  class="side-bar-group">
+													<input type="text"  class="datepicker input-datepicker">
+													<label for=""  class="form-label form-label-sm">到</label>
+													<input type="text"  class="datepicker input-datepicker">
+												</div>
+												<div class="side-bar-group">
+													<span class="side-bar-label">预订周期</span>
+													<select name="" id="" class="select-default">
+														<option value="0">每周一</option>
+														<option value="0">每周二</option>
+														<option value="0">每周三</option>
+														<option value="0">每周四</option>
+														<option value="0">每周五</option>
+														<option value="0">每周六</option>
+														<option value="0">每周日</option>
+													</select>
+												</div>
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">选择场次</h3>
+												</div>
+												<div  class="side-bar-group">
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">1号场地</option>
+														<option value="0">2号场地</option>
+														<option value="0">3号场地</option>
+														<option value="0">4号场地</option>
+														<option value="0">5号场地</option>
+														<option value="0">6号场地</option>
+													</select>
+												</div>
+												<div class="side-bar-group">
+													<a href="#" class="dcz-btn btn-default  left">查询</a>
+													<span class="side-bar-label">&nbsp;&nbsp;&nbsp;合计场次    2场 x 60</span>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">总计</span>
+													<p  class="side-bar-input">￥<em class="money-count2">0</em></p>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">支付类型</span>
+												</div>
+												<div class="side-bar-group">
+													<input type="radio" checked="checked" id="payTime1" name="payTime">
+													<label for="payTime1">一次性支付</label>
+													<input type="radio" id="payTime2" name="payTime">
+													<label for="payTime2" >按消费时间支付</label>
+												</div>
+												<div class="side-bar-group">
+													<input type="radio" checked="checked" id="haspay-2">
+													<label for="haspay-2">已支付</label>
+												</div>
+												<div class="side-bar-group">
+													<input type="radio" checked="checked" id="payStyle1-2" name="payStyle-2">
+													<label for="payStyle1-2">现金支付</label>
+													<input type="radio" id="payStyle2-2" name="payStyle-2">
+													<label for="payStyle2-2" >刷卡支付</label>
+												</div>
+												<div  class="side-bar-group">
+													<input type="button" value="售"  onclick="alert('成功')" class="dcz-btn btn-default btn-lg submit">
+												</div>
+											</div>
+										</form>
+									</div>
+									<!-- tab-content 3 -->
+									<div class="tab-content">
+										<form action="#">
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">有效日期</h3>
+												</div>
+												<div  class="side-bar-group">
+													<input type="text"  class="datepicker input-datepicker">
+													<label for=""  class="form-label form-label-sm">到</label>
+													<input type="text"  class="datepicker input-datepicker">
+												</div>
+												<div class="side-bar-group">
+													<span class="side-bar-label">预订周期</span>
+													<select name="" id="" class="select-default ">
+														<option value="0">每周一</option>
+														<option value="0">每周二</option>
+														<option value="0">每周三</option>
+														<option value="0">每周四</option>
+														<option value="0">每周五</option>
+														<option value="0">每周六</option>
+														<option value="0">每周日</option>
+													</select>
+												</div>
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">选择场次</h3>
+												</div>
+												<div  class="side-bar-group">
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">1号场地</option>
+														<option value="0">2号场地</option>
+														<option value="0">3号场地</option>
+														<option value="0">4号场地</option>
+														<option value="0">5号场地</option>
+														<option value="0">6号场地</option>
+													</select>
+												</div>
+												<div class="side-bar-group">
+													<a href="#" class="dcz-btn btn-default  left">查询</a>
+													<span class="side-bar-label">&nbsp;&nbsp;&nbsp;合计场次    2场 x 60</span>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">备注</span>
+													<textarea name="" id="" cols="28" rows="6"  class="site-bar-textarea"></textarea>
+												</div>
+												<div  class="side-bar-group">
+													<input type="button" value="锁定" onclick="alert('锁定成功');" class="dcz-btn btn-warning btn-lg submit">
+												</div>
+											</div>
+										</form>
+									</div>
+									<!-- tab-content 4 -->
+									<div class="tab-content">
+										<form action="#">
+											<div class="side-bar">
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">有效日期</h3>
+												</div>
+												<div  class="side-bar-group">
+													<input type="text"  class="datepicker input-datepicker">
+													<label for=""  class="form-label form-label-sm">到</label>
+													<input type="text"  class="datepicker input-datepicker">
+												</div>
+												<div class="side-bar-group">
+													<span class="side-bar-label">预订周期</span>
+													<select name="" id="" class="select-default">
+														<option value="0">每周一</option>
+														<option value="0">每周二</option>
+														<option value="0">每周三</option>
+														<option value="0">每周四</option>
+														<option value="0">每周五</option>
+														<option value="0">每周六</option>
+														<option value="0">每周日</option>
+													</select>
+												</div>
+												<div  class="side-bar-group">
+													<h3  class="side-bar-label">选择场次</h3>
+												</div>
+												<div  class="side-bar-group">
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">8:00</option>
+														<option value="1">9:00</option>
+														<option value="2">10:00</option>
+														<option value="3">11:00</option>
+													</select>
+													<select name="" id=""  class="select-default select-time">
+														<option value="0">1号场地</option>
+														<option value="0">2号场地</option>
+														<option value="0">3号场地</option>
+														<option value="0">4号场地</option>
+														<option value="0">5号场地</option>
+														<option value="0">6号场地</option>
+													</select>
+												</div>
+												<div class="side-bar-group">
+													<a href="#" class="dcz-btn btn-default  left">查询</a>
+													<span class="side-bar-label">&nbsp;&nbsp;&nbsp;合计场次    2场 x 60</span>
+												</div>
+												<div  class="side-bar-group">
+													<span  class="side-bar-label">备注</span>
+													<textarea name="" id="" cols="28" rows="6"  class="site-bar-textarea"></textarea>
+												</div>
+												<div  class="side-bar-group">
+													<input type="button" value="解除锁定" onclick="alert('解锁成功')" class="dcz-btn btn-warning btn-lg submit">
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<!-- 基本预定 end -->
+							</div>
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</div>
+
+		<!-- footer -->
+		<div class="footer-wrapper">
+			<footer class="footer">
+				<p class="info-item site-info">
+					<a href="#" class="item email">dingchangzi@gmail.com</a>
+					<a href="#" class="item mobile">151-1698-3618</a>
+					<a href="#" class="item iphone">iPhone版下载</a>
+					<a href="#"	class="item android">安卓版下载</a>
+				</p>
+				<p class="info-item comp-info">
+					<a href="#">关于我们</a>
+					<a href="#">联系我们</a>
+					<a href="#">加入我们</a>
+				</p>
+			</footer>
+			<div class="copy-right">
+				<p>主题备案号：京ICP备11046296号 网站备案号：京ICP备11046296号-2</p>
+			</div>
+		</div>
+
+	</div>
+</body>
+<script type="text/javascript">
+	var int=window.setInterval("iterates2($('#date').val())",5000);
+	$(function(){
+			var d, s = "";
+			d = new Date();
+			d.setDate(d.getDate()-1);
+			var x = new Array("星期日", "星期一", "星期二","星期三","星期四", "星期五","星期六");				
+			var obj = $('.venues-time-choose.slider.clearfix').find('li');
+			var showObj = $('.venues-time-choose.slider.clearfix').find('dt');
+			obj.each(function(index){				
+				d.setDate(d.getDate()+1);
+				s = d.getFullYear()+"/"+(d.getMonth() + 1)+"/"+d.getDate();
+				if(index==0){
+					$(obj[index]).find('dt').html('今天');
+					$('#date').val(s);
+				}
+				else
+					$(obj[index]).find('dt').html(x[d.getDay()]+"<br />"+(d.getMonth() + 1)+"/"+d.getDate());
+				week = x[d.getDay()];
+				obj[index].setAttribute('id',s);
+			})
+			showObj.each(function(index){
+				//
+			})
+		})
+	$(function(){
+		$('.loading').hide();
+		$('.time-item').children("div")[0].click();
+	})
+</script>
+</html>
